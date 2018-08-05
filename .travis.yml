@@ -1,0 +1,41 @@
+# Disable sudo to speed up build
+sudo:                     false
+
+# Set the build language
+language:                 generic
+
+# Set build branch
+branches:                 master
+
+cache:
+  directories:
+    # Cache the .cache directory
+    - $HOME/.cache
+
+before_install:
+  # Configure access token to enable pushing to the repository
+  - git remote set-url origin https://Richienb:${github_token}@github.com/Richienb/ROS-Quick-Scan.git
+
+  # Set commit username
+  - git config --global user.name "ROS Bot"
+
+  # Set commit email
+  - git config --global user.email "richiebendall@gmail.com"
+
+before_script:
+  # Delete the old hashes file
+  - rm -f ROSQuickScanLibrary.txt
+
+script:
+  # Download the new hashes file
+  - curl -L -o ROSQuickScanLibrary.txt https://rawgit.com/Richienb/virusshare-hashes/master/virushashes.txt
+  
+after_script:
+  # Set commit content
+  - COMMIT_CONTENT="CI | Updated the hashes library [skip ci]"
+
+  # Check and commit
+  - git diff-index --quiet HEAD || git commit -m "$COMMIT_CONTENT"
+
+  # Push changes
+  - until git push origin HEAD:master; do git pull && git commit --amend -m "$COMMIT_CONTENT"; done;
