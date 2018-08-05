@@ -39,3 +39,7 @@ after_script:
 
   # Push changes
   - until git push origin HEAD:master; do git pull && git commit --amend -m "$COMMIT_CONTENT"; done;
+
+notifications:
+  # Disable emails for build status notifications
+  email:                  false
