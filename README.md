@@ -3,23 +3,18 @@ An easy tool to scan files. First released October 2017.
 
 ROS QuickScan is a tool for checking single files against a list of hashes provided by [VirusShare Hashes](https://github.com/Richienb/virusshare-hashes). 
 
-> The following information was extracted from [ROS QuickScan's website](http://ros-quickscan.weebly.com/) created in 2017.
+## Complete security
+You can scan any type of files which are then compared with the thousands of MD5s in the library.
 
-## Features
-
-### Stay Secure, Always
-Scan Files Of Your Choice And Search Within Thousands Of MD5s In The Library.
-
-### Community Powered Index
-Our Ever Growing Virus MD5 Library Is Open To The Community Contributions.
-
-### Founder
-> Richie Bendall
-
-> Hi, my name is Richie and I am the founder of ROS QuickScan a new way to easily scan single files for threats.
+## Community powered index
+The ever growing Virus MD5 Hashlist is open to community contributions. At the moment, it is automatically updated with [hashes from VirusShare](https://www.richie-bendall.ml/virusshare-hashes/).
 
 ## Download
 You can install the latest version from the [releases page](https://github.com/Richienb/ROS-Quick-Scan/releases) of this repository.
 
 ## Contact
 Richie Bendall can be contacted via [email](mailto:richiebendall@gmail.com)
+
+## Legacy information
+The original information is located at [ROS QuickScan's legacy website](http://ros-quickscan.weebly.com/), last updated in October 2017.
+However, the more up-to-date information above was updated in October 2018.
