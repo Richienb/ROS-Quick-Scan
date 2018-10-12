@@ -15,7 +15,8 @@ Our Ever Growing Virus MD5 Library Is Open To The Community Contributions.
 
 ### Founder
 > Richie Bendall
-Hi, my name is Richie and I am the founder of ROS QuickScan a new way to easily scan single files for threats.
+
+> Hi, my name is Richie and I am the founder of ROS QuickScan a new way to easily scan single files for threats.
 
 ## Download
 You can install the latest version from the [releases page](https://github.com/Richienb/ROS-Quick-Scan/releases) of this repository.
