@@ -1,5 +1,5 @@
 # ROS QuickScan
-An easy tool to scan files. First released October 2017.
+An easy tool to scan files. First released in October 2017.
 
 ROS QuickScan is a tool for checking single files against a list of hashes provided by [VirusShare Hashes](https://github.com/Richienb/virusshare-hashes). 
 
