@@ -18,3 +18,6 @@ Richie Bendall can be contacted via [email](mailto:richiebendall@gmail.com)
 ## Legacy information
 The original information is located at [ROS QuickScan's legacy website](http://ros-quickscan.weebly.com/), last updated in October 2017.
 However, the more up-to-date information above was updated in October 2018.
+
+## Copyright
+Some images are copyright [Icons8.com](https://icons8.com/)
