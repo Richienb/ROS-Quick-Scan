@@ -28,7 +28,7 @@ before_script:
 
 script:
   # Download the new hashes file
-  - curl -L -o ROSQuickScanLibrary.txt https://rawgit.com/Richienb/virusshare-hashes/master/virushashes.txt
+  - curl -L -o ROSQuickScanLibrary.txt https://raw.githack.com/Richienb/virusshare-hashes/master/virushashes.txt
   
   # Add all files to the cache
   - git add ROSQuickScanLibrary.txt
