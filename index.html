@@ -1,42 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+
+    <meta name="theme-color" content="#3F51B5">
+
+    <title>ROS Quick Scan</title>
+    <meta name="description" content="A fast way to scan a file against VirusShare's MD5 hash list.">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@0.43.0/dist/material-components-web.min.css">
+
     <style>
-        document:hover {
-          border: 10px dashed #333;
+        :root {
+            --mdc-theme-primary: #3f51b5;
+            --mdc-theme-secondary: #f44336;
+            --mdc-theme-on-primary: #ffffff;
+            --mdc-theme-on-secondary: #ffffff;
+        }
+        
+        :root body {
+            background-color: #3f51b5;
+        }
+        
+        :root body main {
+            background-color: #ffffff;
+            border-radius: 4px;
+            margin: 20px;
+            padding: 20px;
+            min-width: calc(100vw - 80px);
+            min-height: calc(100vh - 80px);
+        }
+        
+        .droparea {
+            width: auto;
+            height: 136px;
+            background-color: #eeeeee;
+            padding-top: 5px;
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .droparea .droparea--text,
+        .droparea .droparea--file-input-button-container {
+            text-align: center;
+        }
+        
+        .droparea .droparea--file-input-helper {
+            position: absolute;
+            top: -100px;
+        }
+        
+        .droparea:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .code {
+            background-color: #e0e0e0;
+        }
+        
+        strong {
+            font-weight: 500;
+        }
+        
+        .results {
+            display: none;
         }
     </style>
-    <div id="holder"></div>
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+
+</head>
+
+<body>
+
+    <main class="mdc-typography">
+        <h1 class="mdc-typography--headline1">ROS Quick Scan</h1>
+        <p class="mdc-typography--body1">A fast way to scan a file against <a target="_blank" rel="noopener" href="https://virusshare.com">VirusShare</a>'s MD5 hash list.</p>
+        <div class="results"><code class="code results--md5"></code> is <span class="results--status"></span>
+            <br>
+            <br>
+        </div>
+        <div class="droparea">
+            <p class="mdc-typography--body1 droparea--text">Drag a file here
+                <br>- or -</p>
+            <div class="droparea--file-input-button-container">
+                <button class="mdc-button mdc-button--outlined droparea--file-input-button" data-mdc-auto-init="MDCRipple">
+                    Upload a file from your computer
+                </button>
+            </div>
+            <br>
+            <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed droparea--progress-bar" data-mdc-auto-init="MDCLinearProgress">
+                <div class="mdc-linear-progress__buffering-dots"></div>
+                <div class="mdc-linear-progress__buffer"></div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+            </div>
+            <input class="droparea--file-input-helper" type="file">
+        </div>
+        <h2 class="mdc-typography--headline2">API Usage</h2>
+        <h3 class="mdc-typography--headline4">Check an MD5 hash</h3>
+        <p class="mdc-typography--body1"><strong>Endpoint</strong>: <code class="code">https://script.google.com/macros/s/AKfycbyS0v38UlKkLe18CwwxLjxKpQ1CQIUiBZGXvA519W2Pf_nqKmM/exec</code></p>
+        <p class="mdc-typography--body1">This endpoint checks if the provided MD5 hash is in the list.</p>
+        <p class="mdc-typography--body1"><strong>Type</strong>: <code class="code">GET</code></p>
+        <p class="mdc-typography--body1"><strong>Parameters</strong>:</p>
+        <p class="mdc-typography--body1"><code class="code">q</code>: The MD5 hash to check.</p>
+        <p class="mdc-typography--body1"><code class="code">callback</code>: An optional JSONP callback.</p>
+        <p class="mdc-typography--body1"><strong>Example output</strong>:</p>
+        <code class="code">
+  {safe: true, success: true}
+  </code>
+        <p class="mdc-typography--body1"><strong>Example failed output</strong>:</p>
+        <code class="code">
+  {success: false, type: 400, message: "The q parameter is too short. An MD5 hash is exactly 32 characters long."}
+  </code>
+        <h3 class="mdc-typography--headline4">List of MD5 hashes</h3>
+        <p class="mdc-typography--body1"><strong>Endpoint</strong>: <code class="code">https://raw.githubusercontent.com/Richienb/virusshare-hashes/master/virushashes.txt</code></p>
+        <p class="mdc-typography--body1"><strong>Type</strong>: <code class="code">GET</code></p>
+        <p class="mdc-typography--body1">This endpoint hosts the list of MD5 hashes that can be checked against the MD5 of a file.</p>
+        <p class="mdc-typography--body1"><strong>Example output</strong>:</p>
+        <code class="code">
+  2d75cc1bf8e57872781f9cd04a529256<br>
+00f538c3d410822e241486ca061a57ee<br>
+3f066dd1f1da052248aed5abc4a0c6a1<br>
+781770fda3bd3236d0ab8274577dddde<br>
+86b6c59aa48a69e16d3313d982791398<br>
+42914d6d213a20a2684064be5c80ffa9<br>
+10699ac57f1cf851ae144ebce42fa587<br>
+248338632580f9c018c4d8f8d9c6c408<br>
+999eb1840c209aa70a84c5cf64909e5f<br>
+12c4201fe1db96a1a1711790b52a3cf9<br>
+  </code>
+        <div class="mdc-snackbar mdc-snackbar--leading error-snackbar">
+            <div class="mdc-snackbar__surface">
+                <div class="mdc-snackbar__label" role="status" aria-live="polite">
+                    ROS Quick Scan doesn't seem to be working.
+                </div>
+                <div class="mdc-snackbar__actions">
+                    <a target="_blank" rel="noopener" href="" class="mdc-button mdc-snackbar__action error-snackbar--link">Report</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <script src="https://unpkg.com/material-components-web@0.43.0/dist/material-components-web.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <script>
+        window.mdc.autoInit();
 
-document.ondragover = function() {
-  return false;
-};
+        var error_snackbar = new mdc.snackbar.MDCSnackbar(
+            document.querySelector(".error-snackbar"));
 
-document.ondragend = function() {
-  return false;
-};
+        $(".droparea--file-input-button").click(function() {
+            $(".droparea--file-input-helper").click();
+        });
 
-document.ondrop = function(event) {
-  event.preventDefault();
+        $(".droparea--file-input-helper").change(function() {
+            processfile(document.querySelector(".droparea--file-input-helper").files[0]);
+        });
 
-  var file = event.dataTransfer.files[0];
-  var reader = new FileReader();
+        $(".droparea").on("dragover", function() {
+            return false;
+        });
 
-  reader.onload = function(event) {
-    var binary = event.target.result;
-    var md5 = CryptoJS.MD5(binary).toString();
-    console.log(md5);
-  };
+        $(".droparea").on("dragend", function() {
+            return false;
+        });
 
-  reader.readAsBinaryString(file);
-};</script>
+        $(".droparea").on("drop", function(e) {
+            e.preventDefault();
+            processfile(event.dataTransfer.files[0]);
+        });
+
+        function processfile(file) {
+            document.querySelector(".droparea--progress-bar").MDCLinearProgress.open();
+
+            $(".results").css("display", "none");
+
+            var reader = new FileReader();
+
+            $(reader).on("load", function(_ref) {
+                var target = _ref.target;
+                var binary = target.result;
+                var md5 = CryptoJS.MD5(binary).toString();
+                $.getJSON(
+                    "https://script.google.com/macros/s/AKfycbyS0v38UlKkLe18CwwxLjxKpQ1CQIUiBZGXvA519W2Pf_nqKmM/exec", {
+                        q: md5
+                    },
+                    function(_ref2) {
+                        var success = _ref2.success,
+                            safe = _ref2.safe,
+                            type = _ref2.type,
+                            message = _ref2.message;
+                        $(".results--md5").html(md5);
+                        if (success === true) {
+                            $(".results--status").html(safe === true ? "safe" : "not safe");
+                            $(".results").css("display", "block");
+                        } else {
+                            $(".error-snackbar--link").attr(
+                                "href", "https://github.com/Richienb/ros-quick-scan/issues/new?title=ROS%20Quick%20Scan%20Isn%27t%20Working&body=%3C!--%20This%20issue%20has%20been%20pre-filled.%20Please%20click%20%22Submit%20new%20issue%22%20--%3EThis%20is%20a%20pre-filled%20message.%20ROS%20Quick%20Scan%20threw%20error%20" +
+                                type + "%20with%20the%20following%20message:%20" + message);
+
+                            error_snackbar.open();
+                        }
+                    });
+
+            });
+
+            reader.readAsBinaryString(file);
+
+            document.querySelector(".droparea--progress-bar").MDCLinearProgress.close();
+        }
+    </script>
+
 </body>
+
 </html>
