@@ -1,13 +1,8 @@
+# Set the build Linux distribution
+dist:                     xenial
+
 # Set the build language
 language:                 generic
-
-# Set build branch
-branches:                 master
-
-cache:
-  directories:
-    # Cache the .cache directory
-    - $HOME/.cache
 
 before_install:
   # Configure access token to enable pushing to the repository
@@ -27,19 +22,15 @@ script:
   # Download the new hashes file
   - curl -L -o ROSQuickScanLibrary.txt https://raw.githack.com/Richienb/virusshare-hashes/master/virushashes.txt
   
-  # Add all files to the cache
+after_script:
+  # Add file to the cache
   - git add ROSQuickScanLibrary.txt
   
-after_script:
-  # Set commit content
-  - COMMIT_CONTENT="CI | Updated the hashes library for legacy support [skip ci]"
+  # Commit file
+  - git commit -m "CI | Updated the hashes library for legacy support [skip ci]"
+  
+  # Push the commit
+  - git push
 
-  # Check and commit
-  - git diff-index --quiet HEAD || git commit -m "$COMMIT_CONTENT"
-
-  # Push changes
-  - until git push origin HEAD:master; do git pull && git commit --amend -m "$COMMIT_CONTENT"; done;
-
-notifications:
-  # Disable emails for build status notifications
-  email:                  false
+# Disable emails for build status notifications
+notifications: email:     false
