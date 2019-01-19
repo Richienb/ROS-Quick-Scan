@@ -32,7 +32,7 @@ script:
   
 after_script:
   # Set commit content
-  - COMMIT_CONTENT="CI | Updated the hashes library [skip ci]"
+  - COMMIT_CONTENT="CI | Updated the hashes library for legacy support [skip ci]"
 
   # Check and commit
   - git diff-index --quiet HEAD || git commit -m "$COMMIT_CONTENT"
